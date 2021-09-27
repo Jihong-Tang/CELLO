@@ -24,7 +24,7 @@ def main():
     [df_mutNum, df_mutGene] = mutStats(df_savi, genelist_selected, 5, remove_LOW)
     print(df_mutNum.head())
     print(df_mutGene.head())
-    print(mutCorMatrix(df_mutGene, 0.1).head())
+    print(cal_mutCorMatrix(df_mutGene, 0.1).head())
 
     print(mutStats.__doc__)
 
@@ -135,7 +135,7 @@ def mutStats(df_savi, genelist_selected, cutoff_freq, remove_LOW=True):
     return([df_mut_num, df_mut_gene])
 
 
-def mutCorMatrix(df_mut_gene, cutoff_pValue=0.1):
+def cal_mutCorMatrix(df_mut_gene, cutoff_pValue=0.1):
     """
     Prepare the mutation correlation dataframe for downstream visulization work. 
     Based on the gene based mutation table gained from function mutStats, the 
@@ -232,7 +232,37 @@ def mutCorMatrix(df_mut_gene, cutoff_pValue=0.1):
     df_mutCorMatrix = pd.DataFrame(np.array(plot_mutCor), columns=
                                    ['listA', 'listB', 'dotSize', 'dotColor'])
     return(df_mutCorMatrix)
-    
+
+
+def cal_mutFreq(df_savi, genelist_selected, df_mut_gene, cutoff_freq):
+    """
+    """
+    # remove the synonymous variant labelled by LOW in feature Effect_Impact
+    df_savi = df_savi.loc[lambda df: df["Effect_Impact"] != 'LOW', :]
+    # pandas Series object ==> list data structure
+    case = df_savi["CaseID"].drop_duplicates().tolist()
+
+    # 13 * 3 matrix initial
+    mt_mutFreq = [[0] * 3 for _ in range(len(genelist_selected))]
+    for i in range(len(genelist_selected)):
+        df_savi_gene = df_savi[df_savi.Gene_Name == genelist_selected[i]]
+        mt_mutFreq[i][0] = len(df_savi_gene.CaseID[(df_savi_gene.Primary_freq >= cutoff_freq) & (
+            df_savi_gene.Recurrent_freq < cutoff_freq)].drop_duplicates())
+        mt_mutFreq[i][1] = len(df_savi_gene.CaseID[(df_savi_gene.Primary_freq < cutoff_freq) & (
+            df_savi_gene.Recurrent_freq >= cutoff_freq)].drop_duplicates())
+        mt_mutFreq[i][2] = sum(df_mut_gene.iloc[:, i] == 'C')
+
+    df_mutFreq = pd.DataFrame(np.array(mt_mutFreq), columns=[
+                              'Primary', 'Recurrent ', 'Common'])
+    df_mutFreq.index = genelist_selected
+    return(df_mutFreq)
+
+#def cal_HMDetection(df_savi, cutoff_mut_freq, cutoff_mut_num, cutoff_HM_score)
+
+
+#def cal_HMFrac()
+
+#def cal_HM_SMratio()
 #-------------------------------
 if __name__ == "__main__":
     main()
