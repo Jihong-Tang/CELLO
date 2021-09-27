@@ -135,6 +135,24 @@ def mutStats(df_savi, genelist_selected, cutoff_freq, remove_LOW=True):
     return([df_mut_num, df_mut_gene])
 
 
+def mutLandscape():
+    return(1)
+
+
+def mutCorrelation(df_mut_gene, cutoff_pValue=0.1):
+
+    # calculate the gene correlation matrix using function cal_mutCorMatrix
+    df_mutCorMatrix = cal_mutCorMatrix(df_mut_gene, cutoff_pValue=0.1)
+
+    # plot the Figure 2 as coMutation figure
+    return(1)
+
+
+def mutFrequency(df_savi, genelist_selected, df_mut_gene, cutoff_freq):
+    """
+    """
+    return(0)
+
 def cal_mutCorMatrix(df_mut_gene, cutoff_pValue=0.1):
     """
     Prepare the mutation correlation dataframe for downstream visulization work. 
