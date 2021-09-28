@@ -1,10 +1,12 @@
 #!/usr/bin/env python
-import sys
+import sys 
 import os
+import re
 import numpy as np
 import pandas as pd
 import matplotlib
 from scipy.stats import fisher_exact
+from scipy.stats import binom_test
 # control the working directory
 print(os.getcwd())
 
@@ -151,6 +153,14 @@ def mutCorrelation(df_mut_gene, cutoff_pValue=0.1):
 def mutFrequency(df_savi, genelist_selected, df_mut_gene, cutoff_freq):
     """
     """
+    # calculate the mutation frequency matrix
+    df_mutFreq = cal_mutFreq(df_savi, genelist_selected, df_mut_gene, cutoff_freq)
+
+    # visualization work
+    return(0)
+
+def mutSignature():
+
     return(0)
 
 def cal_mutCorMatrix(df_mut_gene, cutoff_pValue=0.1):
@@ -275,7 +285,8 @@ def cal_mutFreq(df_savi, genelist_selected, df_mut_gene, cutoff_freq):
     df_mutFreq.index = genelist_selected
     return(df_mutFreq)
 
-#def cal_HMDetection(df_savi, cutoff_mut_freq, cutoff_mut_num, cutoff_HM_score)
+def cal_HMDetection(df_savi, cutoff_mut_freq, cutoff_mut_num, cutoff_HM_score):
+    return(0)
 
 
 #def cal_HMFrac()
